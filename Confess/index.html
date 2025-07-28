@@ -68,10 +68,111 @@
     </div>
   </footer>
 
-  <script src="../JS/confesiones.js"></script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC_et5RjNaI38faN-U0p5inlBpHsLpGsDY",
+    authDomain: "confessapp-48b52.firebaseapp.com",
+    databaseURL: "https://confessapp-48b52-default-rtdb.firebaseio.com",
+    projectId: "confessapp-48b52",
+    storageBucket: "confessapp-48b52.firebasestorage.app",
+    messagingSenderId: "961087797548",
+    appId: "1:961087797548:web:ad27378e9bb44d8b025489",
+    measurementId: "G-VYH6M0K0P7"
+  };
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let confesiones = [];
+let pagina = 0;
+
+document.getElementById("confesionForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const correo = document.getElementById("correo").value;
+  const texto = document.getElementById("mensaje").value;
+  const fondo = document.getElementById("fondo").value;
+
+  try {
+    await db.collection("confesiones").add({
+      correo,
+      texto,
+      fondo,
+      fecha: new Date()
+    });
+
+    document.getElementById("confesionForm").reset();
+    alert("Confesión enviada.");
+    mostrarFormulario();
+    cargarConfesiones();
+  } catch (error) {
+    alert("Error al enviar confesión: " + error.message);
+  }
+});
+
+function mostrarFormulario() {
+  document.getElementById('formulario').classList.remove('oculto');
+  document.getElementById('confesiones').classList.add('oculto');
+}
+
+function verConfesiones() {
+  document.getElementById('formulario').classList.add('oculto');
+  document.getElementById('confesiones').classList.remove('oculto');
+  mostrarConfesiones();
+}
+
+async function cargarConfesiones() {
+  const snapshot = await db.collection("confesiones").orderBy("fecha", "desc").get();
+  confesiones = snapshot.docs.map(doc => doc.data());
+  mostrarConfesiones();
+}
+
+function mostrarConfesiones() {
+  const lista = document.getElementById('listaConfesiones');
+  lista.innerHTML = "";
+
+  if (confesiones.length === 0) {
+    lista.innerHTML = "<p>No hay confesiones aún.</p>";
+    return;
+  }
+
+  const conf = confesiones[pagina];
+  const div = document.createElement("div");
+  div.className = `confesion-box ${conf.fondo}`;
+  div.innerText = conf.texto;
+  lista.appendChild(div);
+}
+
+function siguiente() {
+  if (pagina < confesiones.length - 1) {
+    pagina++;
+    mostrarConfesiones();
+  }
+}
+
+function anterior() {
+  if (pagina > 0) {
+    pagina--;
+    mostrarConfesiones();
+  }
+}
+
+function verTodas() {
+  const lista = document.getElementById('listaConfesiones');
+  lista.innerHTML = "";
+  confesiones.forEach(conf => {
+    const div = document.createElement("div");
+    div.className = `confesion-box ${conf.fondo}`;
+    div.innerText = conf.texto;
+    lista.appendChild(div);
+  });
+}
+
+cargarConfesiones();</script>
   <script src="../JS/menu.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js"></script>
 
 </body>
 </html>
