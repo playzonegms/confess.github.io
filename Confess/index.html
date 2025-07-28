@@ -70,6 +70,7 @@
 
   <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
   const firebaseConfig = {
@@ -83,97 +84,107 @@
     measurementId: "G-VYH6M0K0P7"
   };
 
-firebase.initializeApp(firebaseConfig);
- const app = initializeApp(firebaseConfig);
+  const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const analytics = getAnalytics(app);
 
-let confesiones = [];
-let pagina = 0;
+  let confesiones = [];
+  let pagina = 0;
 
-document.getElementById("confesionForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const correo = document.getElementById("correo").value;
-  const texto = document.getElementById("mensaje").value;
-  const fondo = document.getElementById("fondo").value;
-
-  try {
-    await db.collection("confesiones").add({
-      correo,
-      texto,
-      fondo,
-      fecha: new Date()
-    });
-
-    document.getElementById("confesionForm").reset();
-    alert("Confesión enviada.");
-    mostrarFormulario();
-    cargarConfesiones();
-  } catch (error) {
-    alert("Error al enviar confesión: " + error.message);
-  }
-});
-
-function mostrarFormulario() {
-  document.getElementById('formulario').classList.remove('oculto');
-  document.getElementById('confesiones').classList.add('oculto');
-}
-
-function verConfesiones() {
-  document.getElementById('formulario').classList.add('oculto');
-  document.getElementById('confesiones').classList.remove('oculto');
-  mostrarConfesiones();
-}
-
-async function cargarConfesiones() {
-  const snapshot = await db.collection("confesiones").orderBy("fecha", "desc").get();
-  confesiones = snapshot.docs.map(doc => doc.data());
-  mostrarConfesiones();
-}
-
-function mostrarConfesiones() {
-  const lista = document.getElementById('listaConfesiones');
-  lista.innerHTML = "";
-
-  if (confesiones.length === 0) {
-    lista.innerHTML = "<p>No hay confesiones aún.</p>";
-    return;
-  }
-
-  const conf = confesiones[pagina];
-  const div = document.createElement("div");
-  div.className = `confesion-box ${conf.fondo}`;
-  div.innerText = conf.texto;
-  lista.appendChild(div);
-}
-
-function siguiente() {
-  if (pagina < confesiones.length - 1) {
-    pagina++;
+  async function cargarConfesiones() {
+    const q = query(collection(db, "confesiones"), orderBy("fecha", "desc"));
+    const snapshot = await getDocs(q);
+    confesiones = snapshot.docs.map(doc => doc.data());
     mostrarConfesiones();
   }
-}
 
-function anterior() {
-  if (pagina > 0) {
-    pagina--;
+  document.getElementById("confesionForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const correo = document.getElementById("correo").value;
+    const texto = document.getElementById("mensaje").value;
+    const fondo = document.getElementById("fondo").value;
+
+    try {
+      await addDoc(collection(db, "confesiones"), {
+        correo,
+        texto,
+        fondo,
+        fecha: new Date()
+      });
+
+      document.getElementById("confesionForm").reset();
+      alert("Confesión enviada.");
+      mostrarFormulario();
+      cargarConfesiones();
+    } catch (error) {
+      alert("Error al enviar confesión: " + error.message);
+    }
+  });
+
+  function mostrarFormulario() {
+    document.getElementById('formulario').classList.remove('oculto');
+    document.getElementById('confesiones').classList.add('oculto');
+  }
+
+  function verConfesiones() {
+    document.getElementById('formulario').classList.add('oculto');
+    document.getElementById('confesiones').classList.remove('oculto');
     mostrarConfesiones();
   }
-}
 
-function verTodas() {
-  const lista = document.getElementById('listaConfesiones');
-  lista.innerHTML = "";
-  confesiones.forEach(conf => {
+  function mostrarConfesiones() {
+    const lista = document.getElementById('listaConfesiones');
+    lista.innerHTML = "";
+
+    if (confesiones.length === 0) {
+      lista.innerHTML = "<p>No hay confesiones aún.</p>";
+      return;
+    }
+
+    const conf = confesiones[pagina];
     const div = document.createElement("div");
     div.className = `confesion-box ${conf.fondo}`;
     div.innerText = conf.texto;
     lista.appendChild(div);
-  });
-}
+  }
 
-cargarConfesiones();</script>
+  function siguiente() {
+    if (pagina < confesiones.length - 1) {
+      pagina++;
+      mostrarConfesiones();
+    }
+  }
+
+  function anterior() {
+    if (pagina > 0) {
+      pagina--;
+      mostrarConfesiones();
+    }
+  }
+
+  function verTodas() {
+    const lista = document.getElementById('listaConfesiones');
+    lista.innerHTML = "";
+    confesiones.forEach(conf => {
+      const div = document.createElement("div");
+      div.className = `confesion-box ${conf.fondo}`;
+      div.innerText = conf.texto;
+      lista.appendChild(div);
+    });
+  }
+
+  // Exponer funciones globales para botones HTML
+  window.mostrarFormulario = mostrarFormulario;
+  window.verConfesiones = verConfesiones;
+  window.siguiente = siguiente;
+  window.anterior = anterior;
+  window.verTodas = verTodas;
+
+  // Cargar confesiones al inicio
+  cargarConfesiones();
+</script>
+
   <script src="../JS/menu.js"></script>
 
 </body>
