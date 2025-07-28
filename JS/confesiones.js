@@ -1,5 +1,9 @@
-let confesiones = [];
+let confesiones = JSON.parse(localStorage.getItem("confesiones")) || [];
 let pagina = 0;
+
+function guardarConfesiones() {
+  localStorage.setItem("confesiones", JSON.stringify(confesiones));
+}
 
 function mostrarFormulario() {
   document.getElementById('formulario').classList.remove('oculto');
@@ -60,6 +64,7 @@ document.getElementById("confesionForm").addEventListener("submit", function(e) 
   const fondo = document.getElementById("fondo").value;
 
   confesiones.push({ correo, texto, fondo });
+  guardarConfesiones();
   document.getElementById("confesionForm").reset();
   alert("Confesión enviada.");
   mostrarFormulario();
