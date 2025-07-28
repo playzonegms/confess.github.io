@@ -2,73 +2,126 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Confesiones LLA</title>
-  <link rel="stylesheet" href="../CSS/confesiones.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confesiones Anónimas</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    .oculto { display: none; }
+    .confesion-box {
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      color: white;
+    }
+    .rojo { background: crimson; }
+    .azul { background: royalblue; }
+    .verde { background: seagreen; }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="logo">Confesiones <span>LLA</span></div>
-    <nav class="nav-buttons">
-      <button class="nav-btn" onclick="location.href='../index.html'">Inicio</button>
-      <button class="nav-btn" onclick="location.href='../tos.html'">Términos</button>
-      <button class="nav-btn" onclick="location.href='../privacidad.html'">Privacidad</button>
-    </nav>
-    <button class="hamburger" id="hamburgerBtn">☰</button>
-  </header>
+  <h1>Confesiones Anónimas</h1>
+  <button onclick="mostrarFormulario()">Enviar Confesión</button>
+  <button onclick="verConfesiones()">Ver Confesiones</button>
+  <button onclick="verTodas()">Ver Todas</button>
 
-  <div class="mobile-menu" id="mobileMenu">
-    <button class="close-btn" id="closeMenuBtn">✕</button>
-    <div class="mobile-nav">
-      <a href="../index.html">Inicio</a>
-      <a href="../tos.html">Términos</a>
-      <a href="../privacidad.html">Privacidad</a>
-    </div>
+  <div id="formulario" class="oculto">
+    <h2>Enviar una Confesión</h2>
+    <form id="confesionForm">
+      <input type="email" id="correo" placeholder="Correo (opcional)" /><br><br>
+      <textarea id="mensaje" placeholder="Tu confesión..." required></textarea><br><br>
+      <select id="fondo">
+        <option value="rojo">Rojo</option>
+        <option value="azul">Azul</option>
+        <option value="verde">Verde</option>
+      </select><br><br>
+      <button type="submit">Enviar</button>
+    </form>
   </div>
 
-  <main>
-    <section class="intro">
-      <h1>Confesiones anónimas</h1>
-      <p>En esta sección puedes enviar lo que llevas dentro, sin juicios. Tus confesiones serán mostradas por 24 horas con estilo único.</p>
-    </section>
+  <div id="confesiones" class="oculto">
+    <h2>Confesiones</h2>
+    <div id="listaConfesiones"></div>
+    <button onclick="anterior()">Anterior</button>
+    <button onclick="siguiente()">Siguiente</button>
+  </div>
 
-    <section class="confesiones-actions">
-      <button class="nav-btn" onclick="mostrarFormulario()">Hacer Confesión</button>
-      <button class="nav-btn" onclick="verConfesiones()">Ver Confesiones</button>
-    </section>
+  <script>
+    let pagina = 0;
+    let confesiones = JSON.parse(localStorage.getItem("confesiones")) || [];
 
-    <section class="formulario oculto" id="formulario">
-      <form id="confesionForm">
-        <input type="email" id="correo" placeholder="Tu correo (privado)" required />
-        <textarea id="mensaje" maxlength="250" placeholder="Escribe tu confesión..." required></textarea>
-        <select id="fondo">
-          <option value="gradient1">Rosa - Morado</option>
-          <option value="gradient2">Azul - Cian</option>
-          <option value="gradient3">Naranja - Amarillo</option>
-        </select>
-        <button type="submit" class="nav-btn">Enviar</button>
-      </form>
-    </section>
+    function guardarConfesiones() {
+      localStorage.setItem("confesiones", JSON.stringify(confesiones));
+    }
 
-    <section class="confesiones-lista oculto" id="confesiones">
-      <div id="listaConfesiones"></div>
-      <div class="navegacion">
-        <button class="nav-btn" onclick="anterior()">←</button>
-        <button class="nav-btn" onclick="siguiente()">→</button>
-        <button class="nav-btn" onclick="verTodas()">Ver Todas</button>
-      </div>
-    </section>
-  </main>
+    function mostrarFormulario() {
+      document.getElementById('formulario').classList.remove('oculto');
+      document.getElementById('confesiones').classList.add('oculto');
+    }
 
-  <footer>
-    <p>© 2025 Chilean Development</p>
-    <div class="footer-buttons">
-      <button onclick="location.href='../tos.html'">Términos de Uso</button>
-      <button onclick="location.href='../privacidad.html'">Política de Privacidad</button>
-    </div>
-  </footer>
+    function verConfesiones() {
+      document.getElementById('formulario').classList.add('oculto');
+      document.getElementById('confesiones').classList.remove('oculto');
+      mostrarConfesiones();
+    }
 
-  <script src="../JS/confesiones.js"></script>
-  <script src="../JS/menu.js"></script>
+    function mostrarConfesiones() {
+      const lista = document.getElementById('listaConfesiones');
+      lista.innerHTML = "";
+
+      if (confesiones.length === 0) {
+        lista.innerHTML = "<p>No hay confesiones aún.</p>";
+        return;
+      }
+
+      const conf = confesiones[pagina];
+      const div = document.createElement("div");
+      div.className = `confesion-box ${conf.fondo}`;
+      div.innerText = conf.texto;
+      lista.appendChild(div);
+    }
+
+    function siguiente() {
+      if (pagina < confesiones.length - 1) {
+        pagina++;
+        mostrarConfesiones();
+      }
+    }
+
+    function anterior() {
+      if (pagina > 0) {
+        pagina--;
+        mostrarConfesiones();
+      }
+    }
+
+    function verTodas() {
+      const lista = document.getElementById('listaConfesiones');
+      lista.innerHTML = "";
+      confesiones.forEach(conf => {
+        const div = document.createElement("div");
+        div.className = `confesion-box ${conf.fondo}`;
+        div.innerText = conf.texto;
+        lista.appendChild(div);
+      });
+    }
+
+    document.getElementById("confesionForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const correo = document.getElementById("correo").value;
+      const texto = document.getElementById("mensaje").value;
+      const fondo = document.getElementById("fondo").value;
+
+      confesiones.push({ correo, texto, fondo });
+      guardarConfesiones();
+
+      document.getElementById("confesionForm").reset();
+      alert("Confesión enviada.");
+      mostrarFormulario();
+    });
+  </script>
 </body>
 </html>
