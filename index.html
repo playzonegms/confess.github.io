@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
- <meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Título de la pestaña -->
   <title>Home | LLA</title>
 
-  <!-- Descripción para motores de búsqueda y previews -->
+  <!-- SEO & redes -->
   <meta name="description" content="Envía y lee confesiones anónimas en LLA Confess. Sé parte del anonimato, sin filtros." />
-
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="https://cdhub.store/Assets/Img/logo.png" />
   <link rel="apple-touch-icon" href="https://cdhub.store/Assets/Img/logo.png" />
 
-  <!-- Open Graph / Facebook -->
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://cdhub.store/Confess/" />
   <meta property="og:title" content="Home | LLA" />
@@ -27,23 +23,21 @@
   <meta name="twitter:title" content="Home | LLA" />
   <meta name="twitter:description" content="Envía y lee confesiones anónimas en LLA Confess. Sé parte del anonimato, sin filtros." />
   <meta name="twitter:image" content="https://cdhub.store/Assets/Img/logo.png" />
+
+  <!-- CSS -->
   <link rel="stylesheet" href="CSS/styles.css" />
 </head>
 <body>
   <header class="topbar">
     <div class="logo">Confesiones LLA</div>
-    
-    <nav class="nav-buttons">
+    <nav class="nav-buttons" aria-label="Menú principal">
       <button class="nav-btn" onclick="location.href='Confess'">Confesiones</button>
       <button class="nav-btn" onclick="location.href='Contacts'">Contacto</button>
     </nav>
-
-    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">
-      &#9776;
-    </button>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">&#9776;</button>
   </header>
 
-  <aside id="mobileMenu" class="mobile-menu">
+  <aside id="mobileMenu" class="mobile-menu" aria-label="Menú móvil">
     <button class="close-btn" id="closeMenuBtn" aria-label="Cerrar menú">&times;</button>
     <nav class="mobile-nav">
       <a href="Confess">Confesiones</a>
@@ -54,31 +48,31 @@
   <main>
     <section class="intro">
       <h1>Bienvenido a Confesiones LLA</h1>
-      <p>Un espacio seguro y anónimo para que los estudiantes del Liceo La Asuncion puedan expresar lo que sienten, opinan, y mas sin miedo ni prejuicios.</p>
-      <p>Aquí puedes compartir tus pensamientos más profundos, tus secretos, esas cosas que no te atreves a contar en voz alta, y leer lo que otros compañeros tienen para decir sin revelar quiénes son.</p>
-      <p>¿Tu crush no te pesca? ¿Tienes una anécdota loca? ¿O simplemente necesitas sacar todo eso que llevas dentro? Este es el lugar perfecto para hacerlo, sin que nadie te juzgue.</p>
-      <p>Además, nos importa que todos se sientan escuchados y seguros. Porque a veces, un mensaje anónimo puede cambiar el día (¡o hasta la vida!) de alguien, y aveces no son anonimos al 100%.</p>
+      <p>Un espacio seguro y anónimo para que los estudiantes del Liceo La Asunción puedan expresar lo que sienten, opinan, y más sin miedo ni prejuicios.</p>
+      <p>Comparte tus pensamientos más profundos, secretos o anécdotas locas. Nadie sabrá quién eres, pero todos podrán leer lo que tengas que decir.</p>
+      <p>¿Tu crush no te pesca? ¿Tienes una historia divertida? ¿Quieres desahogarte? Este es tu lugar.</p>
+      <p>Porque a veces, un mensaje anónimo puede cambiarte el día. Y sí... a veces no es 100% anónimo.</p>
     </section>
 
-    <section class="features">
+    <section class="features" aria-labelledby="beneficios">
       <div class="feature">
         <span class="dot"></span>
-        <p>100% Anónimo: Nadie sabrá que fuiste tú, así que suelta la lengua sin miedo.</p>
+        <p>100% Anónimo: Suelta lo que quieras sin revelar tu identidad.</p>
       </div>
       <div class="feature">
         <span class="dot"></span>
-        <p>Funciona en tu celu, tablet o compu. Perfecto para esos momentos aburridos en clases o en la casa.</p>
+        <p>Compatible con celu, tablet o compu. Exprésate donde sea.</p>
       </div>
       <div class="feature">
         <span class="dot"></span>
-        <p>Comparte y lee confesiones reales, de verdad, sin filtros ni dramas.</p>
+        <p>Lee confesiones reales, de verdad, sin filtros ni censura.</p>
       </div>
     </section>
 
     <section class="extra-info">
       <h2>¿Sabías qué?</h2>
-      <p>Las confesiones ayudan a liberar estrés, mejorar tu ánimo y hasta a conectar con personas que pasan o piensan lo mismo que tú. Aquí no hay etiquetas, solo personas que quieren expresarse y apoyarse.</p>
-      <p>Así que si alguna vez te sentiste solo o con ganas de contar algo, este es tu lugar. ¡Anímate y únete a la comunidad!</p>
+      <p>Confesar lo que sientes puede ayudarte a liberar estrés, conectar con otros y mejorar tu ánimo.</p>
+      <p>Este espacio es para expresarse sin etiquetas. Si alguna vez sentiste que no podías hablar... ahora sí puedes.</p>
     </section>
 
     <section class="motivational">
@@ -89,12 +83,11 @@
   <footer>
     <p>© 2025 Chilean Development</p>
     <div class="footer-buttons">
-      <button onclick="location.href='Terminos-y-Condiciones'">Terminos de Uso</button>
+      <button onclick="location.href='Terminos-y-Condiciones'">Términos de Uso</button>
       <button onclick="location.href='Politicas-de-Privacidad'">Política de Privacidad</button>
     </div>
   </footer>
 
   <script src="JS/menu.js"></script>
-
 </body>
 </html>
