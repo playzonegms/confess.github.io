@@ -1,5 +1,43 @@
-let pagina = 0;
+// CONFIGURA TU FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyBUWXwHBW_HWUsp6Ijbq2ppjBbtSFEKTjM",
+  authDomain: "confess-5111a.firebaseapp.com",
+  projectId: "confess-5111a",
+  storageBucket: "confess-5111a.firebasestorage.app",
+  messagingSenderId: "907960766035",
+  appId: "1:907960766035:web:4a890ef16b614b87e440a6",
+  measurementId: "G-19TKGKLP3H"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 let confesiones = [];
+let pagina = 0;
+
+document.getElementById("confesionForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const correo = document.getElementById("correo").value;
+  const texto = document.getElementById("mensaje").value;
+  const fondo = document.getElementById("fondo").value;
+
+  try {
+    await db.collection("confesiones").add({
+      correo,
+      texto,
+      fondo,
+      fecha: new Date()
+    });
+
+    document.getElementById("confesionForm").reset();
+    alert("Confesión enviada.");
+    mostrarFormulario();
+    cargarConfesiones();
+  } catch (error) {
+    alert("Error al enviar confesión: " + error.message);
+  }
+});
 
 function mostrarFormulario() {
   document.getElementById('formulario').classList.remove('oculto');
@@ -9,18 +47,13 @@ function mostrarFormulario() {
 function verConfesiones() {
   document.getElementById('formulario').classList.add('oculto');
   document.getElementById('confesiones').classList.remove('oculto');
-  cargarConfesiones();
+  mostrarConfesiones();
 }
 
 async function cargarConfesiones() {
-  try {
-    const snapshot = await db.collection("confesiones").orderBy("fecha", "desc").get();
-    confesiones = snapshot.docs.map(doc => doc.data());
-    pagina = 0;
-    mostrarConfesiones();
-  } catch (error) {
-    console.error("Error al cargar confesiones:", error);
-  }
+  const snapshot = await db.collection("confesiones").orderBy("fecha", "desc").get();
+  confesiones = snapshot.docs.map(doc => doc.data());
+  mostrarConfesiones();
 }
 
 function mostrarConfesiones() {
@@ -64,25 +97,4 @@ function verTodas() {
   });
 }
 
-document.getElementById("confesionForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const correo = document.getElementById("correo").value;
-  const texto = document.getElementById("mensaje").value;
-  const fondo = document.getElementById("fondo").value;
-
-  try {
-    await db.collection("confesiones").add({
-      correo,
-      texto,
-      fondo,
-      fecha: new Date()
-    });
-
-    document.getElementById("confesionForm").reset();
-    alert("Confesión enviada.");
-    mostrarFormulario();
-  } catch (error) {
-    alert("Error al enviar confesión: " + error.message);
-  }
-});
+cargarConfesiones();
