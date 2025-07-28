@@ -1,8 +1,6 @@
 let confesiones = JSON.parse(localStorage.getItem("confesiones")) || [];
 let pagina = 0;
 
-const indiceABorrar = 0; 
-confesiones.splice(indiceABorrar, 1);
 
 function guardarConfesiones() {
   localStorage.setItem("confesiones", JSON.stringify(confesiones));
