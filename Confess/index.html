@@ -26,6 +26,47 @@
     .comentario .hora { font-size: 0.8rem; color: #999; margin-left: 0.5rem; }
     .form-comentario textarea { width: 100%; resize: none; background: #2e2e2e; border: 1px solid #8e44ad; border-radius: 5px; color: white; padding: 0.6rem; margin-top: 0.5rem; }
     .form-comentario button { background-color: #8e44ad; color: white; padding: 0.4rem 1rem; border: none; border-radius: 4px; cursor: pointer; margin-top: 0.5rem; }
+    /* Modal estilos */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+    .modal.oculto {
+      display: none;
+    }
+    .modal-content {
+      background: #1e1e1e;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      color: white;
+    }
+    .modal-content h3 {
+      margin-bottom: 1rem;
+      color: #b98ff9;
+    }
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: #8e44ad;
+      font-size: 1.8rem;
+      cursor: pointer;
+      float: right;
+      margin-bottom: 0.5rem;
+    }
+    /* Botón comentarios */
+    .btn-comentarios {
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -76,6 +117,20 @@
       </div>
     </section>
   </main>
+
+  <!-- Modal Comentarios -->
+  <div id="modalComentarios" class="modal oculto">
+    <div class="modal-content">
+      <button id="cerrarModal" class="close-btn">✕</button>
+      <h3>Comentarios</h3>
+      <div id="comentariosContainer" class="lista-comentarios"></div>
+      <form id="formComentarioModal" class="form-comentario">
+        <textarea maxlength="150" placeholder="Escribe un comentario..." required></textarea>
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
+  </div>
+
   <footer>
     <p>© 2025 Chilean Development</p>
     <div class="footer-buttons">
@@ -83,6 +138,7 @@
       <button onclick="location.href='../Politicas-de-Privacidad'">Política de Privacidad</button>
     </div>
   </footer>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -149,12 +205,18 @@
       const q = query(collection(db, `confesiones/${confesionId}/comentarios`), orderBy('fecha'));
       const snapshot = await getDocs(q);
       container.innerHTML = "";
+
+      if (snapshot.empty) {
+        container.innerHTML = "<p>Sé el primero en comentar esta confesión.</p>";
+        return;
+      }
+
       snapshot.forEach(doc => {
         const data = doc.data();
         const div = document.createElement("div");
         div.className = "comentario";
         div.innerHTML = `
-          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Anonimo" />
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Anónimo" />
           <div>
             <span class="autor">Anónimo</span>
             <span class="hora">${new Date(data.fecha.toDate()).toLocaleString()}</span>
@@ -175,18 +237,15 @@
       const div = document.createElement("div");
       div.className = `confesion-box ${conf.fondo}`;
       div.innerText = conf.texto;
-      const comentarios = document.createElement("div");
-      comentarios.className = "comentarios";
-      comentarios.innerHTML = `
-        <div class="lista-comentarios" id="lista-${conf.id}"></div>
-        <form class="form-comentario" onsubmit="enviarComentario(event, '${conf.id}')">
-          <textarea maxlength="150" placeholder="Escribe un comentario..." required></textarea>
-          <button type="submit">Enviar</button>
-        </form>`;
-      div.appendChild(comentarios);
+
+      // Botón Comentarios
+      const botonComentarios = document.createElement("button");
+      botonComentarios.textContent = "Comentarios";
+      botonComentarios.className = "nav-btn btn-comentarios";
+      botonComentarios.onclick = () => abrirModalComentarios(conf.id);
+      div.appendChild(botonComentarios);
+
       lista.appendChild(div);
-      const contenedor = comentarios.querySelector(`#lista-${conf.id}`);
-      cargarComentarios(conf.id, contenedor);
     }
 
     async function enviarComentario(e, confesionId) {
@@ -205,6 +264,7 @@
     window.verConfesiones = verConfesiones;
     window.siguiente = () => { if (pagina < confesiones.length - 1) { pagina++; mostrarConfesiones(); } };
     window.anterior = () => { if (pagina > 0) { pagina--; mostrarConfesiones(); } };
+
     window.verTodas = function() {
       const lista = document.getElementById('listaConfesiones');
       lista.innerHTML = "";
@@ -212,20 +272,68 @@
         const div = document.createElement("div");
         div.className = `confesion-box ${conf.fondo}`;
         div.innerText = conf.texto;
-        const comentarios = document.createElement("div");
-        comentarios.className = "comentarios";
-        comentarios.innerHTML = `
-          <div class="lista-comentarios" id="lista-${conf.id}"></div>
-          <form class="form-comentario" onsubmit="enviarComentario(event, '${conf.id}')">
-            <textarea maxlength="150" placeholder="Escribe un comentario..." required></textarea>
-            <button type="submit">Enviar</button>
-          </form>`;
-        div.appendChild(comentarios);
+
+        // Botón Comentarios
+        const botonComentarios = document.createElement("button");
+        botonComentarios.textContent = "Comentarios";
+        botonComentarios.className = "nav-btn btn-comentarios";
+        botonComentarios.onclick = () => abrirModalComentarios(conf.id);
+        div.appendChild(botonComentarios);
+
         lista.appendChild(div);
-        const contenedor = comentarios.querySelector(`#lista-${conf.id}`);
-        cargarComentarios(conf.id, contenedor);
       });
     };
+
+    // Modal comentarios
+    const modal = document.getElementById("modalComentarios");
+    const cerrarModalBtn = document.getElementById("cerrarModal");
+    const comentariosContainer = document.getElementById("comentariosContainer");
+    const formComentarioModal = document.getElementById("formComentarioModal");
+
+    let confesionActual = null;
+
+    function abrirModalComentarios(confesionId) {
+      confesionActual = confesionId;
+      comentariosContainer.innerHTML = "<p>Cargando comentarios...</p>";
+      modal.classList.remove("oculto");
+      cargarComentarios(confesionId, comentariosContainer);
+    }
+
+    cerrarModalBtn.onclick = () => {
+      modal.classList.add("oculto");
+      confesionActual = null;
+      formComentarioModal.reset();
+    };
+
+    window.onclick = (e) => {
+      if (e.target === modal) {
+        modal.classList.add("oculto");
+        confesionActual = null;
+        formComentarioModal.reset();
+      }
+    };
+
+    formComentarioModal.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!confesionActual) return;
+
+      const texto = formComentarioModal.querySelector("textarea").value.trim();
+      if (texto.length === 0 || texto.length > 150) {
+        alert("El comentario debe tener entre 1 y 150 caracteres.");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, `confesiones/${confesionActual}/comentarios`), {
+          texto,
+          fecha: new Date()
+        });
+        formComentarioModal.reset();
+        cargarComentarios(confesionActual, comentariosContainer);
+      } catch (error) {
+        alert("Error al enviar comentario: " + error.message);
+      }
+    });
 
     cargarConfesiones();
   </script>
