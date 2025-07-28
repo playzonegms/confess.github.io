@@ -58,15 +58,26 @@ function verTodas() {
   });
 }
 
-document.getElementById("confesionForm").addEventListener("submit", function(e) {
+document.getElementById("confesionForm").addEventListener("submit", async function(e) {
   e.preventDefault();
+
   const correo = document.getElementById("correo").value;
   const texto = document.getElementById("mensaje").value;
   const fondo = document.getElementById("fondo").value;
 
-  confesiones.push({ correo, texto, fondo });
-  guardarConfesiones();
-  document.getElementById("confesionForm").reset();
-  alert("Confesión enviada.");
-  mostrarFormulario();
+  try {
+    await db.collection("confesiones").add({
+      correo,
+      texto,
+      fondo,
+      fecha: new Date()
+    });
+
+    document.getElementById("confesionForm").reset();
+    alert("Confesión enviada.");
+    mostrarFormulario();
+  } catch (error) {
+    alert("Error al enviar confesión: " + error.message);
+  }
 });
+
