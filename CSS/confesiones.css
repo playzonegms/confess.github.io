@@ -1,30 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
   background-color: #121212;
   color: #e0e0e0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .topbar {
   position: sticky;
   top: 0;
-  width: 100%;
   backdrop-filter: blur(10px);
   background: rgba(18, 18, 18, 0.85);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  z-index: 110;
+  z-index: 100;
   border-bottom: 1px solid #2e0854;
 }
 
@@ -47,7 +44,7 @@ body {
   cursor: pointer;
   transition: color 0.3s ease;
   font-size: 1rem;
-  padding: 0.3rem 0.8rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 5px;
 }
 
@@ -58,260 +55,165 @@ body {
 
 .hamburger {
   display: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
   background: transparent;
   border: none;
   color: #b98ff9;
   cursor: pointer;
 }
 
-main.confesiones-main {
-  flex-grow: 1;
-  padding: 2rem 2rem 4rem;
-  max-width: 900px;
-  margin: 0 auto;
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #1f1f1f;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 120;
+  padding: 1rem;
 }
 
-main.confesiones-main h1 {
-  font-size: 2.8rem;
-  margin-bottom: 0.5rem;
+.close-btn {
+  font-size: 1.8rem;
+  background: transparent;
+  border: none;
   color: #8e44ad;
-  text-align: center;
+  align-self: flex-end;
+  margin-bottom: 1rem;
 }
 
-main.confesiones-main p {
-  font-size: 1.2rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-nav a {
+  color: #b98ff9;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.intro {
   text-align: center;
+  padding: 2rem 1rem;
+}
+
+.intro h1 {
+  font-size: 2.4rem;
+  color: #8e44ad;
+}
+
+.intro p {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
   color: #cfd8dc;
 }
 
-.buttons-container {
+.confesiones-actions {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
+  margin: 2rem 0;
 }
 
-.primary-btn, .secondary-btn {
-  padding: 0.6rem 1.6rem;
-  font-size: 1.1rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background-color 0.3s ease;
-}
-
-.primary-btn {
-  background-color: #8e44ad;
-  color: #fff;
-}
-
-.primary-btn:hover {
-  background-color: #6f3fb5;
-}
-
-.secondary-btn {
-  background-color: transparent;
-  border: 2px solid #8e44ad;
-  color: #8e44ad;
-}
-
-.secondary-btn:hover {
-  background-color: #8e44ad;
-  color: #fff;
-}
-
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(18, 18, 18, 0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 200;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.modal-content {
-  background-color: #1f1f1f;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 450px;
-  color: #ddd;
-  position: relative;
-}
-
-.modal-content h2 {
-  margin-bottom: 1rem;
-  color: #b98ff9;
-  text-align: center;
-}
-
-.modal-content label {
-  display: block;
-  margin-top: 1rem;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-}
-
-.modal-content input[type="email"],
-.modal-content textarea,
-.modal-content select {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #8e44ad;
-  background-color: #121212;
-  color: #eee;
-  resize: vertical;
-  font-size: 1rem;
-}
-
-.modal-content textarea {
-  min-height: 100px;
-}
-
-.modal-content button[type="submit"] {
-  margin-top: 1.5rem;
-  width: 100%;
-  font-weight: 700;
-}
-
-.close {
-  position: absolute;
-  right: 1rem;
-  top: 0.5rem;
-  font-size: 2rem;
-  color: #b98ff9;
-  cursor: pointer;
-}
-
-
-#confesionesSection {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.confesion-display {
-  background: linear-gradient(135deg, #8e44ad, #b98ff9);
-  padding: 2rem;
-  border-radius: 12px;
-  min-height: 120px;
-  margin-bottom: 1rem;
-  color: #fff;
-  font-size: 1.2rem;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  transition: background 0.4s ease;
-}
-
-.confesion-footer {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-bottom: 1rem;
-}
-
-.nav-arrow {
-  background: transparent;
-  border: none;
-  font-size: 2.5rem;
-  color: #8e44ad;
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.3s ease;
-}
-
-.nav-arrow:hover {
-  color: #b98ff9;
-}
-
-#viewAllConfesiones {
-  margin-bottom: 2rem;
-}
-
-#allConfesionesList {
-  max-height: 300px;
-  overflow-y: auto;
-  background-color: #1f1f1f;
+.formulario,
+.confesiones-lista {
+  max-width: 600px;
+  margin: auto;
   padding: 1rem;
-  border-radius: 8px;
-  color: #ccc;
-  font-size: 1rem;
-  text-align: left;
 }
 
-.confesion-item {
-  background-color: #292929;
-  border-radius: 6px;
-  padding: 0.7rem 1rem;
-  margin-bottom: 0.6rem;
-  word-wrap: break-word;
-  white-space: pre-wrap;
+.formulario input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background-color: #1e1e1e;
+  border: 1px solid #8e44ad;
+  color: #fff;
+  border-radius: 5px;
 }
 
-.confesion-item .email {
-  font-size: 0.85rem;
-  color: #a890c8;
-  margin-bottom: 0.3rem;
+textarea {
+  resize: none;
 }
 
-.confesion-item .mensaje {
-  font-size: 1rem;
-  color: #ddd;
+.confesion-box {
+  padding: 1rem;
+  border-radius: 10px;
+  color: white;
+  margin: 1rem 0;
 }
 
-
-.grad1 {
-  background: linear-gradient(135deg, #8e44ad, #b98ff9);
+/* Gradientes */
+.gradient1 {
+  background: linear-gradient(135deg, #ff6ec4, #7873f5);
 }
 
-.grad2 {
-  background: linear-gradient(135deg, #004d7a, #008793);
+.gradient2 {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
 }
 
-.grad3 {
-  background: linear-gradient(135deg, #cb2d3e, #ef473a);
+.gradient3 {
+  background: linear-gradient(135deg, #f7971e, #ffd200);
 }
 
-.grad4 {
-  background: linear-gradient(135deg, #11998e, #38ef7d);
+footer {
+  background-color: #1f1f1f;
+  color: #bda2e1;
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid #2e0854;
 }
 
-.grad5 {
-  background: linear-gradient(135deg, #ff8008, #ffc837);
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
+.footer-buttons button {
+  background-color: transparent;
+  border: 1px solid #8e44ad;
+  color: #8e44ad;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.footer-buttons button:hover {
+  background-color: #8e44ad;
+  color: #121212;
+}
+
+.navegacion {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.oculto {
+  display: none;
+}
 
 @media (max-width: 600px) {
   .nav-buttons {
     display: none;
   }
+
   .hamburger {
     display: block;
   }
 
-  main.confesiones-main {
-    padding: 1rem 1rem 3rem;
-  }
-
-  main.confesiones-main h1 {
-    font-size: 2rem;
-  }
-
-  main.confesiones-main p {
-    font-size: 1rem;
+  .confesiones-actions {
+    flex-direction: column;
   }
 }

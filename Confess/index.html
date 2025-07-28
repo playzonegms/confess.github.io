@@ -2,85 +2,73 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Confesiones LLA - Confesiones</title>
-  <link rel="stylesheet" href="../CSS/confesiones.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confesiones LLA</title>
+  <link rel="stylesheet" href="../CSS/confesiones.css"/>
 </head>
 <body>
   <header class="topbar">
-    <div class="logo">Confesiones LLA</div>
+    <div class="logo">Confesiones <span>LLA</span></div>
     <nav class="nav-buttons">
       <button class="nav-btn" onclick="location.href='../index.html'">Inicio</button>
-      <button class="nav-btn" onclick="location.href='../terminos.html'">Términos de Uso</button>
+      <button class="nav-btn" onclick="location.href='../tos.html'">Términos</button>
+      <button class="nav-btn" onclick="location.href='../privacidad.html'">Privacidad</button>
     </nav>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">&#9776;</button>
+    <button class="hamburger" id="hamburgerBtn">☰</button>
   </header>
 
-  <aside id="mobileMenu" class="mobile-menu">
-    <button class="close-btn" id="closeMenuBtn" aria-label="Cerrar menú">&times;</button>
-    <nav class="mobile-nav">
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-btn" id="closeMenuBtn">✕</button>
+    <div class="mobile-nav">
       <a href="../index.html">Inicio</a>
-      <a href="../terminos.html">Términos de Uso</a>
-    </nav>
-  </aside>
-
-  <main class="confesiones-main">
-    <h1>Confesiones</h1>
-    <p>Un espacio para que compartas lo que piensas o sientes de forma segura y anónima. ¡Exprésate sin miedo!</p>
-
-    <div class="buttons-container">
-      <button id="openFormBtn" class="primary-btn">Hacer confesión</button>
-      <button id="viewConfesionesBtn" class="secondary-btn">Ver confesiones</button>
+      <a href="../tos.html">Términos</a>
+      <a href="../privacidad.html">Privacidad</a>
     </div>
+  </div>
 
-    <div id="confesionesFormModal" class="modal hidden">
-      <div class="modal-content">
-        <span class="close" id="closeFormBtn">&times;</span>
-        <h2>Haz tu confesión</h2>
-        <form id="confesionForm">
-          <label for="email">Correo (auto registrado para pruebas):</label>
-          <input type="email" id="email" name="email" required placeholder="tucorreo@ejemplo.com" />
+  <main>
+    <section class="intro">
+      <h1>Confesiones anónimas</h1>
+      <p>En esta sección puedes enviar lo que llevas dentro, sin juicios. Tus confesiones serán mostradas por 24 horas con estilo único.</p>
+    </section>
 
-          <label for="mensaje">Tu confesión (máx 250 caracteres):</label>
-          <textarea id="mensaje" name="mensaje" maxlength="250" required placeholder="Escribe aquí tu confesión..."></textarea>
+    <section class="confesiones-actions">
+      <button class="nav-btn" onclick="mostrarFormulario()">Hacer Confesión</button>
+      <button class="nav-btn" onclick="verConfesiones()">Ver Confesiones</button>
+    </section>
 
-          <label for="background">Elige un fondo para tu mensaje:</label>
-          <select id="background" name="background" required>
-            <option value="" disabled selected>Selecciona un gradiente</option>
-            <option value="grad1">Violeta Suave</option>
-            <option value="grad2">Azul Oceánico</option>
-            <option value="grad3">Rojo Pasión</option>
-            <option value="grad4">Verde Brillante</option>
-            <option value="grad5">Naranja Cálido</option>
-          </select>
+    <section class="formulario oculto" id="formulario">
+      <form id="confesionForm">
+        <input type="email" id="correo" placeholder="Tu correo (privado)" required />
+        <textarea id="mensaje" maxlength="250" placeholder="Escribe tu confesión..." required></textarea>
+        <select id="fondo">
+          <option value="gradient1">Rosa - Morado</option>
+          <option value="gradient2">Azul - Cian</option>
+          <option value="gradient3">Naranja - Amarillo</option>
+        </select>
+        <button type="submit" class="nav-btn">Enviar</button>
+      </form>
+    </section>
 
-          <button type="submit" class="primary-btn">Enviar confesión</button>
-        </form>
+    <section class="confesiones-lista oculto" id="confesiones">
+      <div id="listaConfesiones"></div>
+      <div class="navegacion">
+        <button class="nav-btn" onclick="anterior()">←</button>
+        <button class="nav-btn" onclick="siguiente()">→</button>
+        <button class="nav-btn" onclick="verTodas()">Ver Todas</button>
       </div>
-    </div>
-
-    <section id="confesionesSection" class="hidden">
-      <div class="confesion-display">
-        <p id="confesionText">No hay confesiones aún.</p>
-      </div>
-      <div class="confesion-footer">
-        <button id="prevConfesion" class="nav-arrow" aria-label="Anterior">&#8592;</button>
-        <button id="nextConfesion" class="nav-arrow" aria-label="Siguiente">&#8594;</button>
-      </div>
-      <button id="viewAllConfesiones" class="secondary-btn">Ver todas las confesiones</button>
-      <div id="allConfesionesList" class="hidden"></div>
     </section>
   </main>
 
   <footer>
     <p>© 2025 Chilean Development</p>
     <div class="footer-buttons">
-      <button onclick="location.href='../terminos.html'">Términos de Uso</button>
+      <button onclick="location.href='../tos.html'">Términos de Uso</button>
       <button onclick="location.href='../privacidad.html'">Política de Privacidad</button>
     </div>
   </footer>
 
-  <script src="../JS/menu.js"></script>
   <script src="../JS/confesiones.js"></script>
+  <script src="../JS/menu.js"></script>
 </body>
 </html>
