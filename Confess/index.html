@@ -127,6 +127,7 @@
       <form id="formComentarioModal" class="form-comentario">
         <textarea maxlength="150" placeholder="Escribe un comentario..." required></textarea>
         <button type="submit">Enviar</button>
+        <label><input type="checkbox" id="esAdminCheckbox"> Comentar como Admin</label>
       </form>
     </div>
   </div>
@@ -141,7 +142,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getFirestore, collection, deleteDoc, doc, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 
     const firebaseConfig = {
@@ -273,6 +274,19 @@
         div.className = `confesion-box ${conf.fondo}`;
         div.innerText = conf.texto;
 
+        if (esAdmin()) {
+  const eliminarBtn = document.createElement("button");
+  eliminarBtn.textContent = "Eliminar";
+  eliminarBtn.className = "nav-btn";
+  eliminarBtn.onclick = async () => {
+    await deleteDoc(doc(db, "confesiones", conf.id));
+    alert("Confesión eliminada.");
+    cargarConfesiones();
+  };
+  div.appendChild(eliminarBtn);
+}
+
+
         // Botón Comentarios
         const botonComentarios = document.createElement("button");
         botonComentarios.textContent = "Comentarios";
@@ -336,6 +350,11 @@
     });
 
     cargarConfesiones();
+
+    function esAdmin() {
+  return localStorage.getItem("correoUsuario") === adminCorreo;
+}
+
   </script>
   <script src="../JS/menu.js"></script>
 </body>
